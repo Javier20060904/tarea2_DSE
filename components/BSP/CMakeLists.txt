@@ -1,3 +1,3 @@
 idf_component_register(SRCS "BSP.c"
-                    REQUIRES driver
+                    REQUIRES driver esp_adc
                     INCLUDE_DIRS ".")

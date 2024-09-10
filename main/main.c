@@ -1,4 +1,6 @@
 #include "BSP.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
 static const char *TAG = "example";
 

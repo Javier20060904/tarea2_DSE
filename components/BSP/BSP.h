@@ -6,11 +6,14 @@
 #include <stdbool.h>
 #include <string.h>
 #include "esp_log.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 #include "driver/gpio.h"
-#include "driver/adc.h"
 #include "driver/uart.h"
+#include "esp_adc/adc_continuous.h"
+
+
+//Declaracion de macros
+#define GPIO_Write(gpio_num, valor) gpio_set_level(gpio_num, valor)
+#define GPIO_Read(gpio_num) gpio_get_level(gpio_num)
 
 //Definiciones generales
 #define TRUE    1
@@ -34,8 +37,6 @@ void ADC_Init(void);                    // Inicializar ADC
 
 // GPIO
 void GPIO_Init(void);                               // Inicializar GPIO
-//void GPIO_Write(gpio_num_t gpio_num, int level);    // Escribir en GPIO
-//int GPIO_Read(gpio_num_t gpio_num);                 // Leer GPIO
 
 // LED
 void LED_Init(void);            // Inicializar LED
