@@ -5,8 +5,10 @@
 void app_main(void)
 {
     systemInit();
+    #if !RTOS
     while(1){
-        systemStatus();
+        systemBehavior();
         vTaskDelay(2000 / portTICK_PERIOD_MS);
     }
+    #endif
 }

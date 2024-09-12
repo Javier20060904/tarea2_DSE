@@ -3,8 +3,10 @@
 
 #include "HAL.h"
 
+#define RTOS 0
+
 void systemInit();
 void systemTerminate();
-void systemStatus();
+void systemBehavior();
 
 #endif

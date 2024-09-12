@@ -6,6 +6,7 @@ bool systemState = true, adcState = true;
 
 static void IRAM_ATTR systemInterrupt(){
     ESP_LOGI(TAG, "INTERRUPCION");
+    systemTerminate();
 }
 
 void systemInit(void){
@@ -19,13 +20,16 @@ void systemInit(void){
 
 void systemTerminate(void){
     systemState = false;
-    GPIO_Write(LED_PIN, false);
+    adcState = false;
+    GPIO_Write(LED_PIN, systemState);
     ESP_LOGI(TAG, "SISTEMA APAGADO");
 }
 
-void systemStatus(void){
+void systemBehavior(void){
     ESP_LOGI(TAG, "ESTADO DEL SISTEMA: %d", systemState);
-    if(adcState == false)
+    if(adcState == false){
         ESP_LOGI(TAG, "NO DISPONIBLE");
+        return;
+    }
     ESP_LOGI(TAG, "LECTURA DEL ADC: %d", ADC_Read(ADC_CHANNEL));
 }
