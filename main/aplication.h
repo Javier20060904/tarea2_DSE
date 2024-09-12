@@ -3,8 +3,6 @@
 
 #include "HAL.h"
 
-#define RTOS 0
-
 #if RTOS
     extern TaskHandle_t adcHandle;
     extern TaskHandle_t systemHandle;
