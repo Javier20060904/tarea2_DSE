@@ -4,12 +4,15 @@
     TaskHandle_t adcHandle = NULL;
     TaskHandle_t systemHandle = NULL;
     TaskHandle_t buttonHandle = NULL;
+    bool buttonState = true;
+#elif !RTOS
+    int32_t startMilis;
 #endif
+
 
 static const char *TAG = "example";
 
-bool systemState = true, buttonState = true;
-
+bool systemState = true;
 
 #if !RTOS
     static void IRAM_ATTR systemInterrupt(void* arg){
@@ -34,19 +37,25 @@ void systemInit(void){
     #if RTOS
         if(adcHandle != NULL)
             vTaskResume(adcHandle);
+    #elif !RTOS
+        startMilis = (int32_t) esp_timer_get_time()/1000;
     #endif
     ESP_LOGI(TAG, "INICIA SISTEMA");
 }
 
 #if !RTOS
     void systemBehavior(void){
-        GPIO_Write(LED_PIN, systemState);
-        ESP_LOGI(TAG, "ESTADO DEL SISTEMA: %s", systemState ? "ENCENDIDO" : "APAGADO");
-        if(!systemState){
-            ESP_LOGI(TAG, "NO DISPONIBLE");
-            return;
+        int32_t currentMillis = (int32_t) esp_timer_get_time()/1000;
+        if(currentMillis - startMilis >= 1000){
+            ESP_LOGI(TAG, "ESTADO DEL SISTEMA: %s", systemState ? "ENCENDIDO" : "APAGADO");
+            if(!systemState)
+                ESP_LOGI(TAG, "NO DISPONIBLE");
+            else
+                ESP_LOGI(TAG, "LECTURA DEL ADC: %d V", VOLTAGE_READ(ADC_CHANNEL));
+            startMilis = currentMillis;
         }
-        ESP_LOGI(TAG, "LECTURA DEL ADC: %d V", VOLTAGE_READ(ADC_CHANNEL));
+        GPIO_Write(LED_PIN, systemState);
+        vTaskDelay(10 / portTICK_PERIOD_MS);
     }
 
 #elif RTOS

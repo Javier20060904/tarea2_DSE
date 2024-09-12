@@ -9,6 +9,7 @@
 #include "driver/gpio.h"
 #include "driver/uart.h"
 #include "esp_adc/adc_oneshot.h"
+#include "esp_timer.h"
 
 //Definiciones generales
 #define TRUE    1

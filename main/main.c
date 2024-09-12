@@ -11,7 +11,6 @@ void app_main(void)
     #if !RTOS
         while(1){
             systemBehavior();
-            vTaskDelay(1000 / portTICK_PERIOD_MS);
         }
     #elif RTOS
         xTaskCreate(vADC, "vADC", 4096, NULL, 9, &adcHandle);
