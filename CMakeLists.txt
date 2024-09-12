@@ -5,11 +5,16 @@
 cmake_minimum_required(VERSION 3.16)
 
 
-#Definiciones de compilacion
-
-add_compile_definitions(RTOS=1)
-add_compile_definitions(ESP32) 
-add_compile_definitions(IDF_TARGET="esp32")
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
+
+#Definiciones de compilacion
+if(${IDF_TARGET} STREQUAL "esp32")
+    add_compile_definitions(ESP32)
+elseif(${IDF_TARGET} STREQUAL "esp32c3")
+    add_compile_definitions(ESP32C3)
+endif()
+
+add_compile_definitions(RTOS=0)
+
 project(DSE_Tarea2_Equipo1)
