@@ -3,10 +3,22 @@
 
 #include "HAL.h"
 
-#define RTOS 0
+#define RTOS 1
+
+#if RTOS
+    extern TaskHandle_t adcHandle;
+    extern TaskHandle_t systemHandle;
+#endif
 
 void systemInit();
 void systemTerminate();
-void systemBehavior();
+void periphInit(void);
+
+#if !RTOS
+    void systemBehavior();
+#elif RTOS
+    void vADC(void *arg);
+    void vSystem(void *arg);
+#endif
 
 #endif
