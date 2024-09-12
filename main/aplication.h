@@ -1,7 +1,7 @@
 #ifndef APLICATION_H
 #define APLICATION_H
 
-#include "BSP.h"
+#include "HAL.h"
 
 void systemInit();
 void systemTerminate();
