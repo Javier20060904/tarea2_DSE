@@ -4,6 +4,8 @@ adc_oneshot_unit_handle_t adc_handle;
 
 void GPIO_Set_Interrupt(gpio_num_t puerto, gpio_isr_t function){
     GPIO_Set(puerto, GPIO_MODE_INPUT);
+    GPIO_PullMode(puerto, GPIO_PULLUP_ONLY);
+    gpio_set_intr_type(puerto, GPIO_INTR_POSEDGE);
     gpio_install_isr_service(0);
     gpio_isr_handler_add(puerto, function, NULL);
     gpio_intr_enable(puerto);

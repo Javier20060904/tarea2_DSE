@@ -3,28 +3,33 @@
 #if RTOS
     TaskHandle_t adcHandle = NULL;
     TaskHandle_t systemHandle = NULL;
-
+    TaskHandle_t buttonHandle = NULL;
 #endif
 
 static const char *TAG = "example";
 
-bool systemState = true, adcState = true;
+bool systemState = true, buttonState = true;
 
-static void IRAM_ATTR systemInterrupt(){
-    ESP_LOGI(TAG, "INTERRUPCION");
-    systemTerminate();
-}
+
+#if !RTOS
+    static void IRAM_ATTR systemInterrupt(void* arg){
+        systemState = !systemState;
+    }
+#endif
 
 void periphInit(void){
     ADC_Init(ADC_CHANNEL);
     GPIO_Set(LED_PIN, GPIO_MODE_OUTPUT);
-    GPIO_Set(BUTTON_PIN, GPIO_MODE_INPUT);
-    GPIO_Set_Interrupt(BUTTON_PIN, systemInterrupt);
+    #if RTOS
+        GPIO_Set(BUTTON_PIN, GPIO_MODE_INPUT);
+        GPIO_PullMode(BUTTON_PIN, GPIO_PULLUP_ONLY);
+    #elif !RTOS
+        GPIO_Set_Interrupt(BUTTON_PIN, systemInterrupt);
+    #endif
 }
 
 void systemInit(void){
     systemState = true;
-    adcState = true;
     GPIO_Write(LED_PIN, systemState);
     #if RTOS
         if(adcHandle != NULL)
@@ -33,30 +38,26 @@ void systemInit(void){
     ESP_LOGI(TAG, "INICIA SISTEMA");
 }
 
-void systemTerminate(void){
-    systemState = false;
-    adcState = false;
-    GPIO_Write(LED_PIN, systemState);
-    #if RTOS
-        vTaskSuspend(adcHandle);
-    #endif
-    ESP_LOGI(TAG, "SISTEMA APAGADO");
-}
-
 #if !RTOS
     void systemBehavior(void){
+        GPIO_Write(LED_PIN, systemState);
         ESP_LOGI(TAG, "ESTADO DEL SISTEMA: %s", systemState ? "ENCENDIDO" : "APAGADO");
-        if(!adcState){
+        if(!systemState){
             ESP_LOGI(TAG, "NO DISPONIBLE");
             return;
         }
-        ESP_LOGI(TAG, "LECTURA DEL ADC: %d", ADC_Read(ADC_CHANNEL));
+        ESP_LOGI(TAG, "LECTURA DEL ADC: %d V", VOLTAGE_READ(ADC_CHANNEL));
     }
 
 #elif RTOS
     void vADC(void *arg){
         while(1){
-            ESP_LOGI(TAG, "LECTURA DEL ADC: %d", ADC_Read(ADC_CHANNEL));
+            if(!systemState){
+                ESP_LOGI(TAG, "NO DISPONIBLE");
+            }
+            else{
+                ESP_LOGI(TAG, "LECTURA DEL ADC: %d V", VOLTAGE_READ(ADC_CHANNEL));
+            }
             vTaskDelay(1000 / portTICK_PERIOD_MS);
         }
     }
@@ -65,10 +66,22 @@ void systemTerminate(void){
         while (1)
         {
             ESP_LOGI(TAG, "ESTADO DEL SISTEMA: %s", systemState ? "ENCENDIDO" : "APAGADO");
-            if(!adcState){
-                ESP_LOGI(TAG, "NO DISPONIBLE");
-            }
             vTaskDelay(1000 / portTICK_PERIOD_MS);
         }    
+    }
+
+    void vButton(void *arg){
+        while ((1))
+        {
+            int B = GPIO_Read(BUTTON_PIN);
+            if (B != buttonState) {
+                if(B == LOW){
+                    systemState = !systemState;
+                    GPIO_Write(LED_PIN, systemState);
+                }
+                buttonState = B;
+            }
+            vTaskDelay(10 / portTICK_PERIOD_MS);
+        }
     }
 #endif

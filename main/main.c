@@ -11,10 +11,11 @@ void app_main(void)
     #if !RTOS
         while(1){
             systemBehavior();
-            vTaskDelay(2000 / portTICK_PERIOD_MS);
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
         }
     #elif RTOS
-        xTaskCreate(vADC, "vADC", 4096, NULL, 10, &adcHandle);
-        xTaskCreate(vSystem, "vADC", 2048, NULL, 10, &systemHandle);
+        xTaskCreate(vADC, "vADC", 4096, NULL, 9, &adcHandle);
+        xTaskCreate(vSystem, "vADC", 2048, NULL, 8, &systemHandle);
+        xTaskCreate(vButton, "vButton", 2048, NULL, 10, &buttonHandle);
     #endif
 }

@@ -7,6 +7,7 @@
 #define GPIO_Write(gpio_num, value) gpio_set_level(gpio_num, value)
 #define GPIO_Read(gpio_num) gpio_get_level(gpio_num)
 #define GPIO_Set(gpio_num, mode) gpio_set_direction(gpio_num, mode)
+#define GPIO_PullMode(gpio_num, mode) gpio_set_pull_mode(gpio_num, mode)
 
 /*-----------------------------------------------------------*/
 // Declaraciones de funciones

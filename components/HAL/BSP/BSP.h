@@ -19,8 +19,8 @@
 // Definiciones de pines y canales
 #ifdef ESP32
     #define LED_PIN     GPIO_NUM_2
-    #define BUTTON_PIN  GPIO_NUM_0
-    #define ADC_CHANNEL ADC_CHANNEL_1
+    #define BUTTON_PIN  GPIO_NUM_19
+    #define ADC_CHANNEL ADC_CHANNEL_0
     #define UART_PORT   UART_NUM_0
 #elif ESPC3
     #define LED_PIN     GPIO_NUM_2
