@@ -1,4 +1,5 @@
 #include "aplication.h"
+#include "BSP.h"
 
 #if RTOS
     TaskHandle_t adcHandle = NULL;
@@ -54,7 +55,7 @@ void systemInit(void){
                 ESP_LOGI(TAG, "LECTURA DEL ADC: %d V", VOLTAGE_READ(ADC_CHANNEL));
             startMilis = currentMillis;
         }
-        GPIO_Write(LED_PIN, systemState);
+        GPIO_Write(LED_PIN, systemState ? LED_ON : LED_OFF);
         vTaskDelay(10 / portTICK_PERIOD_MS);
     }
 
