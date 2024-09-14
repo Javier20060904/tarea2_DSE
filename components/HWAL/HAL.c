@@ -30,3 +30,4 @@ int ADC_Read(adc_channel_t channel){
     adc_oneshot_read(adc_handle, channel, &adc_reading);
     return adc_reading;
 }
+

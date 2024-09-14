@@ -10,6 +10,9 @@
 #endif
 
 #define VOLTAGE_READ(adc) (ADC_Read(adc) * 5 / 4095)
+//#define VOLTAGE_POT(ref_1,ref_2) (5* ((ADC_Read(ref_1)-ADC_Read(ref_2))/(4095-ADC_Read(ref_2))) )
+
+int voltagePot(int ref_1, int ref_2);
 
 void systemInit();
 void periphInit(void);

@@ -21,7 +21,8 @@
 #ifdef ESP32
     #define LED_PIN     GPIO_NUM_2
     #define BUTTON_PIN  GPIO_NUM_19
-    #define ADC_CHANNEL ADC_CHANNEL_6
+    #define ADC_CHANNEL_REF_1 ADC_CHANNEL_6
+    #define ADC_CHANNEL_REF_2 ADC_CHANNEL_7
     #define UART_PORT   UART_NUM_0
     #define LED_ON 1
     #define LED_OFF 0
